@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { useSelector , useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import {useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {updateAction} from './redux/UpdateAction'
 import { connect } from 'react-redux'
 
@@ -9,33 +9,33 @@ const validate = values => {
 
     const errors = {}
 
-    if (!values.fullName) {
-      errors.fullName = 'Required'
+    if (!values.Name) {
+      errors.Name = 'Required'
     }
 
-    if (!values.emailId) {
-      errors.emailId = 'Required'
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.emailId)) {
-      errors.emailId= 'Invalid email address'
+    if (!values.Email) {
+      errors.Email = 'Required'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.Email)) {
+      errors.Email= 'Invalid email address'
     }
-    if (!values.city) {
-        errors.city = 'Required'
+    if (!values.City) {
+        errors.City = 'Required'
     }
 
     if (!values.Gender) {
         errors.Gender = 'Required'
     }
 
-    if (!values.phone) {
-      errors.phone = 'Required'
-    } else if (!/^[6-9]\d{9}$/i.test(values.phone)) {
-      errors.phone = 'Invalid Mobile number(It allows number starting with 9 / 8 / 7 / 6)'
+    if (!values.Phone) {
+      errors.Phone = 'Required'
+    } else if (!/^[6-9]\d{9}$/i.test(values.Phone)) {
+      errors.Phone = 'Invalid Mobile number(It allows number starting with 9 / 8 / 7 / 6)'
     }
 
-    if (!values.pincode) {
-        errors.pincode = 'Required'
-      } else if (!/^[0-9]\d{5}$/i.test(values.pincode)) {
-        errors.pincode = 'Invalid Pincode'
+    if (!values.Pincode) {
+        errors.Pincode = 'Required'
+      } else if (!/^[0-9]\d{5}$/i.test(values.Pincode)) {
+        errors.Pincode = 'Invalid Pincode'
       }
 
     return errors
@@ -62,7 +62,7 @@ const validate = values => {
       </div>
     </div>
   )
-  const renderSelectField = ({ input, label, type, className,meta: { touched, error }, children }) => (
+  const renderSelectField = ({ input, label, className,meta: { touched, error }, children }) => (
     <div>
       <label className="mt-2">{label}</label>
       <div>
@@ -76,25 +76,30 @@ const validate = values => {
   )
 
 function UpdateDetails(props) {
-
-    const noOfList = useSelector(state => JSON.stringify(state.user.data));
-    let staticData =JSON.parse(noOfList);
     const dispatch = useDispatch();
     const history = useHistory();
     const handleLink = () => history.push('/');
     const { handleSubmit, pristine, reset, submitting } = props  
     const onSubmitData = formvalues =>{
-        console.log(formvalues);
-        dispatch(updateAction(formvalues.id,formvalues.Name,formvalues.Gender,formvalues.Email,formvalues.Phone,formvalues.City,formvalues.Pincode))
+        // console.log(
+        //   `
+        //   IndexNo:${formvalues.indexNo},
+        //   id:${formvalues.id},
+        //   Name:${formvalues.Name},
+        //   Gender:${formvalues.Gender},
+        //   Email:${formvalues.Email},
+        //   Phone:${formvalues.Phone},
+        //   City:${formvalues.City},
+        //   Pincode:${formvalues.Pincode}
+        //   `);
+        dispatch(updateAction(formvalues.indexNo,formvalues.id,formvalues.Name,formvalues.Gender,formvalues.Email,formvalues.Phone,formvalues.City,formvalues.Pincode))
         handleLink();
       }
     return (
         <div className="container">
-        
+        <h3 className="text-center">Update User Data</h3>
         <form onSubmit={
-            // handleSubmit((formValues)=>{alert(JSON.stringify(formValues))})
             handleSubmit((formValues)=>{
-            console.log(JSON.stringify(formValues)+"Values Updated");
             onSubmitData(formValues);
         })
         } >
@@ -107,19 +112,7 @@ function UpdateDetails(props) {
         <button type="submit" disabled={submitting || pristine} className="btn btn-primary mt-4 btn-lg btn-block">submit</button>
         <button type="button"  onClick={reset} className="btn btn-primary mt-4 btn-lg btn-block">Reset Values</button>
         </form>
-
-        {/* <div>
-           <h1>Update User Details</h1> 
-           <div>   
-            Id:{props.match.params.id}<br />
-            Name:{props.match.params.name}<br />
-            Gender:{props.match.params.gender}<br />
-            Email:{props.match.params.email}
-            </div>
-            <Link to="/" className="btn btn-secondary btn-lg" >Back To HOME</Link>
-        </div> */}
-
-        </div>
+         </div>
     );
 }
 UpdateDetails = reduxForm({
@@ -129,18 +122,19 @@ UpdateDetails = reduxForm({
     onSubmit,
     enableReinitialize: true
   })(UpdateDetails)
-  
+  // indexNo,id,Name,Gender,Email,Phone,City,Pincode
   // You have to connect() to any reducers that you wish to connect to yourself
-  UpdateDetails= connect(
+  UpdateDetails = connect(
     (state,props) => ({
       initialValues:{
-        id:props.match.params.id,
-        Name:props.match.params.name,
-        Gender:props.match.params.gender,
-        Email:props.match.params.email,
-        Phone:props.match.params.phone,
-        City:props.match.params.city,
-        Pincode:props.match.params.pincode
+        indexNo:props.match.params.indexNo,
+        id:state.user.data[props.match.params.indexNo].id,
+        Name:state.user.data[props.match.params.indexNo].Name,
+        Gender:state.user.data[props.match.params.indexNo].Gender,
+        Email:state.user.data[props.match.params.indexNo].Email,
+        Phone:state.user.data[props.match.params.indexNo].Phone,
+        City:state.user.data[props.match.params.indexNo].City,
+        Pincode:state.user.data[props.match.params.indexNo].Pincode
       },
       enableReinitialValues: true 
     })

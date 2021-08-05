@@ -8,8 +8,8 @@ const validate = values => {
 
     const errors = {}
 
-    if (!values.fullName) {
-      errors.fullName = 'Required'
+    if (!values.Name) {
+      errors.Name = 'Required'
     }
 
     if (!values.emailId) {
@@ -23,7 +23,9 @@ const validate = values => {
 
     if (!values.Gender) {
         errors.Gender = 'Required'
-    }
+    }else if (values.Gender === "0") {
+      errors.Gender = 'Please Select your gender'
+  }
 
     if (!values.phone) {
       errors.phone = 'Required'
@@ -56,16 +58,16 @@ const validate = values => {
     <div>
       <label className="mt-2">{label}</label>
       <div>
-        <input autoComplete="off" placeholder={placeholder} className={className} {...input} placeholder={label} type={type}/>
+        <input autoComplete="off" placeholder={placeholder} className={className} {...input} type={type}/>
         {touched && ((error && <span className="text-danger">{error}</span>) || (warning && <span className="text-success">{warning}</span>))}
       </div>
     </div>
   )
-  const renderSelectField = ({ input, label, type, className,meta: { touched, error }, children }) => (
+  const renderSelectField = ({ input, label, placeholder, className,meta: { touched, error }, children }) => (
     <div>
       <label className="mt-2">{label}</label>
       <div>
-        <select {...input} className={className}>
+        <select {...input} className={className} placeholder={placeholder}>
           {children}
         </select>
         {touched && error && <span className="text-danger">{error}</span>}
@@ -81,7 +83,7 @@ function UserForm(props) {
     const onSubmitData = formvalues =>{
         let objectdata = {
         "id":`LS${localStorage.length}`,
-        "Name":`${formvalues.fullName}`,
+        "Name":`${formvalues.Name}`,
         "Gender":`${formvalues.Gender}`,
         "Email":`${formvalues.emailId}`,
         "Phone":`${formvalues.phone}`,
@@ -100,19 +102,19 @@ function UserForm(props) {
         <form onSubmit={
             // handleSubmit((formValues)=>{alert(JSON.stringify(formValues))})
             handleSubmit((formValues)=>{
-            console.log(formValues);
+            // console.log(formValues);
             onSubmitData(formValues)})
         } >
-        <Field label="Name" placeholder="Enter your full name" type="text" name="fullName" className="form-control" component={renderInput} />
-        <Field label="Gender" name="Gender" component={renderSelectField } className="form-control" placeholder="Please select your gender">
-        <option />
+        <Field label="Name" placeholder="Enter your full name" type="text" name="Name" className="form-control" component={renderInput} />
+        <Field label="Gender" placeholder="Please Select your Gender" name="Gender" component={renderSelectField } className="form-control" >
+          <option value="0">Please select your gender</option>
             <option value="Male">Male</option>
             <option value="Female">FeMale</option>
         </Field>
-        <Field label="Email" type="email" name="emailId" className="form-control" component={renderInput} />
-        <Field label="Phone" type="text" maxLength="10" name="phone" className="form-control" component={renderInput} />
-        <Field label='City' type="text" name="city" className="form-control" component={renderInput} />
-        <Field label="Pincode" type="text" name="pincode" className="form-control" component={renderInput} />
+        <Field label="Email" placeholder="Enter your Email id" type="email" name="emailId" className="form-control" component={renderInput} />
+        <Field label="Phone" placeholder="Enter your phone number" type="text" maxLength="10" name="phone" className="form-control" component={renderInput} />
+        <Field label='City' placeholder="Enter your city" type="text" name="city" className="form-control" component={renderInput} />
+        <Field label="Pincode" placeholder="Enter your pincode" type="text" name="pincode" className="form-control" component={renderInput} />
         <button type="submit" disabled={submitting || pristine} className="btn btn-primary mt-4 btn-lg btn-block">submit</button>
         <button type="button" disabled={pristine || submitting} onClick={reset} className="btn btn-primary mt-4 btn-lg btn-block">Clear Values</button>
         </form>
