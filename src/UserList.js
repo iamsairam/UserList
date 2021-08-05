@@ -1,6 +1,4 @@
 import React from 'react';
-import deleteIcon from './delete.svg'
-import addIcon from './addSvg.svg'
 import {Link} from 'react-router-dom'
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +21,7 @@ function UserList(props) {
         <div className="d-flex justify-content-between py-2">
         <div><h3>No.of Active Users - {staticData.length}</h3></div>
         <div><Link className="btn btn-primary" to="/AddUser">
-          <span className="ml-2"><img src={addIcon} alt="Add icon" className="mr-2"/>Add User</span>
+          <span className="ml-2">Add User</span>
         </Link></div>
       </div>
       <div className="table-responsive">
@@ -46,7 +44,7 @@ function UserList(props) {
                 <td>{person.Gender}</td>
                 <td>{person.Email}</td>
                 <td><button className="btn btn-primary btn-block" onClick={()=>{handleLinkClick(index)}}>Update</button></td>
-                <td><button className="btn btn-danger btn-block" onClick={()=>{dispatch(deleteAction(index))}}><img src={deleteIcon} alt='Delete Icon' />Delete</button></td>
+                <td><button className="btn btn-danger btn-block" onClick={()=>{dispatch(deleteAction(index))}}>Delete</button></td>
         </tr>
         )}
         </React.Fragment>
